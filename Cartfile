@@ -1,0 +1,2 @@
+github "BatchLabs/ios-sdk" >= 1.19.0
+github "at-internet/piano-analytics-apple" ~> 3.0

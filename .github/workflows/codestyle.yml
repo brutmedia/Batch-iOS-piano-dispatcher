@@ -1,0 +1,45 @@
+name: Code Formatting
+on: push
+
+jobs:
+  format:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup clang-format 14
+        shell: bash
+        run: |
+          sudo rm -f /usr/bin/clang-format
+          sudo ln -s /usr/bin/clang-format-14 /usr/bin/clang-format
+
+      - name: Setup swiftformat cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/swiftformat-bin
+          key: ${{ runner.os }}-swiftformat-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftformat-
+
+      - name: Install SwiftFormat
+        shell: bash
+        run: |
+          if [ -x "${SWIFTFORMAT_PREBUILT_DIR}/swiftformat" ]; then
+            echo "Found swiftformat prebuilt"
+            sudo cp ${SWIFTFORMAT_PREBUILT_DIR}/swiftformat /usr/bin/
+          else
+            echo "Building SwiftFormat"
+            cd /tmp/
+            git clone https://github.com/nicklockwood/SwiftFormat
+            cd SwiftFormat
+            swift build -c release
+            mkdir -p ${SWIFTFORMAT_PREBUILT_DIR}
+            cp .build/release/swiftformat ${SWIFTFORMAT_PREBUILT_DIR}/
+            sudo cp .build/release/swiftformat /usr/bin/
+          fi
+        env:
+          SWIFTFORMAT_PREBUILT_DIR: "/tmp/swiftformat-bin"
+
+      - name: Check codestyle
+        shell: bash
+        run: make format-check
