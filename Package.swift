@@ -15,7 +15,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/BatchLabs/Batch-iOS-SDK", from: "1.19.0"),
-        .package(url: "https://github.com/at-internet/piano-analytics-apple", from: "3.0.0"),
+        .package(url: "https://github.com/brutmedia/piano-analytics-apple", from: "3.0.0"),
         .package(url: "https://github.com/pirishd/InstantMock", .upToNextMajor(from: "2.0.0")),
     ],
     targets: [
